@@ -5,11 +5,11 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { PieChart, Briefcase, Plus, Search, Sun, Moon } from 'lucide-react';
+import { Home, Briefcase, Plus, Search, Sun, Moon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { href: '/', icon: PieChart, label: 'Home' },
+  { href: '/', icon: Home, label: 'Home' },
   { href: '/applications', icon: Briefcase, label: 'Apps' },
   { href: '/add', icon: Plus, label: 'Add', isMain: true },
   { href: '/applications?focus=search', icon: Search, label: 'Search' },
@@ -26,7 +26,7 @@ export function MobileNav() {
 
   return (
     <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 px-4 pb-4 pt-2 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
-      <div className="bg-card/90 backdrop-blur-xl h-16 rounded-2xl grid grid-cols-5 items-stretch shadow-2xl border border-border overflow-visible px-2 pointer-events-auto">
+      <div className="bg-card/95 backdrop-blur-xl h-16 rounded-2xl grid grid-cols-5 items-stretch shadow-2xl border border-border overflow-visible px-2 pointer-events-auto">
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           const Icon = item.icon;
@@ -72,7 +72,7 @@ export function MobileNav() {
           {mounted ? (
             <>
               {theme === 'dark' ? (
-                <Sun className="h-5 w-5 text-yellow-400" />
+                <Sun className="h-5 w-5 text-amber-400" />
               ) : (
                 <Moon className="h-5 w-5 text-primary" />
               )}
