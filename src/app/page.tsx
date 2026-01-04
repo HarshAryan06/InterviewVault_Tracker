@@ -11,6 +11,7 @@ import { StatusBadge } from '@/components/features/status-badge';
 import { ProgressRing } from '@/components/features/progress-ring';
 import { useApplications } from '@/hooks';
 import { calculateStats, calculateProgressPercentage } from '@/lib/stats';
+import { ApplicationStatus } from '@/types';
 import { 
   Briefcase, 
   FileText, 
@@ -43,7 +44,7 @@ export default function DashboardPage() {
   const responseRate = useMemo(() => {
     if (applications.length === 0) return 0;
     const responded = applications.filter(app => 
-      app.status !== 'Applied' && app.status !== 'Pending'
+      app.status !== ApplicationStatus.APPLIED && app.status !== ApplicationStatus.PENDING
     ).length;
     return Math.round((responded / applications.length) * 100);
   }, [applications]);
