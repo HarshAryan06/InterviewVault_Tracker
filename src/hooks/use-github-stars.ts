@@ -12,26 +12,41 @@ interface GitHubRepo {
 }
 
 export function useGitHubStars() {
+  // Safe defaults for SSR - always start with false loading state
   const [starCount, setStarCount] = useState<number | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === 'undefined') {
+      setIsLoading(false);
+      return;
+    }
+
     const fetchStars = async () => {
       try {
         setIsLoading(true);
         
         // Check localStorage for cached data (5 minute cache)
         const cacheKey = `github-stars-${GITHUB_USERNAME}-${GITHUB_REPO}`;
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) {
-          const { count, timestamp } = JSON.parse(cached);
-          const now = Date.now();
-          // Use cache if less than 5 minutes old
-          if (now - timestamp < 5 * 60 * 1000) {
-            setStarCount(count);
-            setIsLoading(false);
-            return;
+        let cached: string | null = null;
+        
+        if (typeof window !== 'undefined') {
+          cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            try {
+              const { count, timestamp } = JSON.parse(cached);
+              const now = Date.now();
+              // Use cache if less than 5 minutes old
+              if (now - timestamp < 5 * 60 * 1000) {
+                setStarCount(count);
+                setIsLoading(false);
+                return;
+              }
+            } catch (e) {
+              // Invalid cache, continue to fetch
+            }
           }
         }
 
@@ -48,10 +63,14 @@ export function useGitHubStars() {
         if (!response.ok) {
           // If rate limited, try to use cached value
           if (response.status === 403 && cached) {
-            const { count } = JSON.parse(cached);
-            setStarCount(count);
-            setIsLoading(false);
-            return;
+            try {
+              const { count } = JSON.parse(cached);
+              setStarCount(count);
+              setIsLoading(false);
+              return;
+            } catch (e) {
+              // Invalid cache, continue
+            }
           }
           throw new Error('Failed to fetch repository data');
         }
@@ -60,21 +79,33 @@ export function useGitHubStars() {
         setStarCount(data.stargazers_count);
         
         // Cache the result
-        localStorage.setItem(cacheKey, JSON.stringify({
-          count: data.stargazers_count,
-          timestamp: Date.now(),
-        }));
+        if (typeof window !== 'undefined') {
+          try {
+            localStorage.setItem(cacheKey, JSON.stringify({
+              count: data.stargazers_count,
+              timestamp: Date.now(),
+            }));
+          } catch (e) {
+            // localStorage might be disabled, ignore
+          }
+        }
         
         setError(null);
       } catch (err) {
         console.error('Error fetching GitHub stars:', err);
         setError(err instanceof Error ? err.message : 'Unknown error');
         // Try to use cached value on error
-        const cacheKey = `github-stars-${GITHUB_USERNAME}-${GITHUB_REPO}`;
-        const cached = localStorage.getItem(cacheKey);
-        if (cached) {
-          const { count } = JSON.parse(cached);
-          setStarCount(count);
+        if (typeof window !== 'undefined') {
+          const cacheKey = `github-stars-${GITHUB_USERNAME}-${GITHUB_REPO}`;
+          const cached = localStorage.getItem(cacheKey);
+          if (cached) {
+            try {
+              const { count } = JSON.parse(cached);
+              setStarCount(count);
+            } catch (e) {
+              // Invalid cache, ignore
+            }
+          }
         }
       } finally {
         setIsLoading(false);

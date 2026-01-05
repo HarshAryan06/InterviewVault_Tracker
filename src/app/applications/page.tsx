@@ -198,8 +198,8 @@ export default function ApplicationsPage() {
         {filteredApps.length === 0 && (
           <Card className="col-span-full animate-scale-in">
             <CardContent className="py-20 text-center">
-              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl gradient-bg-subtle flex items-center justify-center">
-                <Briefcase className="h-10 w-10 text-primary/50" />
+              <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-muted flex items-center justify-center border border-border">
+                <Briefcase className="h-10 w-10 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-bold mb-2">
                 {applications.length === 0 ? 'No applications yet' : 'No matching applications'}

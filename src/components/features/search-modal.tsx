@@ -124,8 +124,8 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
               </div>
             ) : (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <div className="w-16 h-16 rounded-2xl gradient-bg-subtle flex items-center justify-center mb-4">
-                  <Search className="h-8 w-8 text-primary/50" />
+                <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4 border border-border">
+                  <Search className="h-8 w-8 text-muted-foreground" />
                 </div>
                 <h3 className="text-lg font-bold mb-2">No results found</h3>
                 <p className="text-sm text-muted-foreground max-w-sm">
@@ -135,8 +135,8 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
             )
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <div className="w-16 h-16 rounded-2xl gradient-bg-subtle flex items-center justify-center mb-4">
-                <Search className="h-8 w-8 text-primary/50" />
+              <div className="w-16 h-16 rounded-2xl bg-muted flex items-center justify-center mb-4 border border-border">
+                <Search className="h-8 w-8 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-bold mb-2">Start searching</h3>
               <p className="text-sm text-muted-foreground max-w-sm mb-4">

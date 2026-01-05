@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { HoverBorderGradient } from '@/components/ui/hover-border-gradient';
 import { Separator } from '@/components/ui/separator';
 import { StatsSection } from '@/components/features/stats-section';
 import { StatusBadge } from '@/components/features/status-badge';
@@ -17,7 +18,6 @@ import {
   ChevronRight,
   Plus,
   ArrowRight,
-  Sparkles,
   TrendingUp,
   Target,
   Calendar,
@@ -73,10 +73,16 @@ export default function DashboardPage() {
       {/* Hero Section */}
       <div className="space-y-5">
         <div className="animate-fade-in">
-          <Badge variant="secondary" className="gradient-bg-subtle border-0 text-xs font-semibold px-3 py-1.5">
-            <Sparkles className="h-3 w-3 mr-1.5" />
-            Track Your Career
-          </Badge>
+          <HoverBorderGradient
+            as="div"
+            containerClassName="rounded-full"
+            className="bg-background/80 dark:bg-background/80 text-foreground border-0"
+            duration={1.5}
+          >
+            <span className="text-xs font-semibold px-3 py-1.5">
+              Track Your Career
+            </span>
+          </HoverBorderGradient>
         </div>
         <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight leading-[1.1] animate-fade-in-up stagger-1">
           <span className="gradient-text-primary">Track Every</span>
@@ -170,8 +176,8 @@ export default function DashboardPage() {
                   style={{ animationDelay: `${0.6 + index * 0.05}s` }}
                 >
                   <div className="flex items-center gap-4 flex-1 min-w-0">
-                    <div className="w-12 h-12 gradient-bg-subtle rounded-xl flex items-center justify-center transition-all duration-500 ease-out group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-amber-500 group-hover:scale-110 group-hover:shadow-lg shrink-0">
-                      <Briefcase className="h-5 w-5 text-primary transition-colors duration-300 group-hover:text-white" />
+                    <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center border border-border transition-all duration-300 ease-out group-hover:bg-accent shrink-0">
+                      <Briefcase className="h-5 w-5 text-muted-foreground transition-colors duration-300 group-hover:text-foreground" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-bold truncate transition-colors duration-300 group-hover:text-primary mb-0.5">{app.companyName}</p>
@@ -191,9 +197,9 @@ export default function DashboardPage() {
               </Link>
             ))}
             {applications.length === 0 && (
-              <div className="text-center py-12 gradient-bg-subtle rounded-2xl border-2 border-dashed border-border/50">
-                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl gradient-bg-subtle flex items-center justify-center shadow-lg">
-                  <Briefcase className="h-10 w-10 text-primary/50" />
+              <div className="text-center py-12 bg-muted/30 rounded-2xl border-2 border-dashed border-border/50">
+                <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-muted flex items-center justify-center border border-border">
+                  <Briefcase className="h-10 w-10 text-muted-foreground" />
                 </div>
                 <h3 className="text-base font-bold mb-2">No Applications Yet</h3>
                 <p className="text-sm text-muted-foreground mb-4 max-w-xs mx-auto">

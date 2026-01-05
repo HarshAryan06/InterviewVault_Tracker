@@ -20,8 +20,8 @@ export function ApplicationCard({ app }: ApplicationCardProps) {
         <CardContent className="p-5 flex flex-col h-full relative">
           {/* Header */}
           <div className="flex justify-between items-start mb-4">
-            <div className="w-12 h-12 gradient-bg-subtle rounded-xl flex items-center justify-center shadow-sm transition-all duration-500 ease-out group-hover:bg-gradient-to-br group-hover:from-orange-500 group-hover:to-amber-500 group-hover:scale-105">
-              <Briefcase className="h-5 w-5 text-primary transition-colors duration-500 group-hover:text-white" />
+            <div className="w-12 h-12 bg-muted rounded-xl flex items-center justify-center border border-border transition-all duration-300 ease-out group-hover:bg-accent">
+              <Briefcase className="h-5 w-5 text-muted-foreground transition-colors duration-300 group-hover:text-foreground" />
             </div>
             <div className="flex items-center gap-2">
               <StatusBadge status={app.status} size="sm" />
@@ -49,9 +49,9 @@ export function ApplicationCard({ app }: ApplicationCardProps) {
 
           {/* Resume Tag */}
           <div className="flex items-center gap-2 mb-4">
-            <div className="flex items-center gap-1.5 gradient-bg-subtle px-3 py-1.5 rounded-lg max-w-full transition-colors duration-300 group-hover:bg-primary/10">
-              <FileText className="h-3 w-3 text-primary" />
-              <span className="text-[10px] font-bold text-primary truncate uppercase tracking-tight">
+            <div className="flex items-center gap-1.5 bg-muted px-3 py-1.5 rounded-lg max-w-full border border-border transition-colors duration-300 group-hover:bg-accent">
+              <FileText className="h-3 w-3 text-muted-foreground" />
+              <span className="text-[10px] font-semibold text-foreground truncate uppercase tracking-tight">
                 {app.resumeName}
               </span>
             </div>

@@ -24,14 +24,15 @@ import {
   Building2,
   MapPin,
   FileText,
-  Sparkles,
+  Lightbulb,
   Send,
   X,
   Info,
   TrendingUp,
   Target,
   Zap,
-  Calendar
+  Calendar,
+  CalendarDays
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -65,6 +66,12 @@ export default function AddApplicationPage() {
     
     await new Promise(resolve => setTimeout(resolve, 400));
     
+    // Get the date from form or use today's date
+    const dateAppliedValue = formData.get('dateApplied') as string;
+    const appliedDate = dateAppliedValue 
+      ? new Date(dateAppliedValue).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    
     const app: Application = {
       id: crypto.randomUUID(),
       companyName: formData.get('companyName') as string,
@@ -75,7 +82,7 @@ export default function AddApplicationPage() {
       resumeFile: fileData || undefined,
       notes: '',
       jobDescription: formData.get('jobDescription') as string,
-      dateApplied: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      dateApplied: appliedDate,
     };
     
     addApplication(app);
@@ -159,133 +166,73 @@ export default function AddApplicationPage() {
   };
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6">
+    <div className="max-w-5xl mx-auto space-y-6">
       {/* Header */}
-      <header className="flex items-center justify-between gap-4 animate-fade-in">
-        <div className="flex items-center gap-4">
-          <Link href="/">
-            <Button variant="outline" size="icon" className="h-11 w-11 rounded-xl transition-transform duration-300 hover:scale-105">
-              <ArrowLeft className="h-4 w-4" />
-            </Button>
-          </Link>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 gradient-bg rounded-xl flex items-center justify-center shadow-lg glow-sm">
-              <FilePlus className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight">
-                <span className="gradient-text-primary">Add</span> Application
-              </h2>
-              <p className="text-muted-foreground text-xs font-medium">
-                Track a new company you applied to
-              </p>
-            </div>
+      <header className="flex items-center gap-4 animate-fade-in pb-2">
+        <Link href="/">
+          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg transition-all duration-300 hover:bg-accent hover:scale-105">
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+        </Link>
+        <div className="flex items-center gap-3 flex-1">
+          <div className="w-10 h-10 gradient-bg rounded-xl flex items-center justify-center shadow-lg">
+            <FilePlus className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h1 className="text-2xl font-extrabold tracking-tight">
+              <span className="gradient-text-primary">Add</span> Application
+            </h1>
+            <p className="text-muted-foreground text-xs font-medium mt-0.5">
+              Track a new company you applied to
+            </p>
           </div>
         </div>
-        <Badge variant="secondary" className="gradient-bg-subtle hidden sm:flex">
-          <Sparkles className="h-3 w-3 mr-1.5" />
-          New Application
-        </Badge>
       </header>
-
-      {/* Analytics Section */}
-      {applications.length > 0 && (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 animate-fade-in-up">
-          <CompactProgressRing 
-            percentage={responseRate} 
-            label="Response"
-            value={`${responseRate}%`}
-            gradientId="progressGradient1"
-          />
-          <CompactProgressRing 
-            percentage={progressPercentage} 
-            label="Interview"
-            value={`${progressPercentage}%`}
-            gradientId="progressGradient2"
-          />
-          <CompactProgressRing 
-            percentage={offerRate} 
-            label="Offer"
-            value={`${offerRate}%`}
-            gradientId="progressGradient3"
-          />
-        </div>
-      )}
-
-      {/* Quick Stats Cards */}
-      {applications.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 animate-fade-in-up stagger-1">
-          {[
-            { icon: Briefcase, value: applications.length, label: 'Total Apps', color: 'from-orange-500 to-amber-500', textColor: 'stats-number' },
-            { icon: Target, value: stats.interviews, label: 'Interviews', color: 'from-blue-500 to-cyan-500', textColor: 'text-blue-500' },
-            { icon: CheckCircle, value: stats.offers, label: 'Offers', color: 'from-emerald-500 to-green-500', textColor: 'text-emerald-500' },
-            { icon: Calendar, value: stats.applied, label: 'Applied', color: 'from-purple-500 to-pink-500', textColor: 'text-purple-500' },
-          ].map((stat, index) => (
-            <Card 
-              key={stat.label} 
-              className="card-hover overflow-hidden group animate-fade-in-up"
-              style={{ animationDelay: `${0.1 + index * 0.05}s` }}
-            >
-              <CardContent className="p-4 flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg transition-transform duration-500 ease-out group-hover:scale-110`}>
-                  <stat.icon className="h-5 w-5 text-white" />
-                </div>
-                <div>
-                  <p className={`text-2xl font-bold ${stat.textColor}`}>{stat.value}</p>
-                  <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">{stat.label}</p>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Form Section */}
-        <div className="lg:col-span-2 space-y-6">
-      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="lg:col-span-2 space-y-5">
+      <form onSubmit={handleSubmit} className="space-y-5">
         {/* Company Information Section */}
-        <Card className="overflow-hidden animate-fade-in-up stagger-1 card-hover">
-          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-5 px-6">
-            <CardTitle className="text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
-              <Building2 className="h-4 w-4 text-primary" />
+        <Card className="overflow-hidden animate-fade-in-up stagger-1 border-2 hover:border-primary/30 transition-all duration-300">
+          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-4 px-5">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
+              <Building2 className="h-3.5 w-3.5 text-primary" />
               Company Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-5">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div className="space-y-2.5 group">
-                <Label htmlFor="companyName" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+          <CardContent className="p-5 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2 group">
+                <Label htmlFor="companyName" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
                   Company Name
-                  <span className="text-destructive">*</span>
+                  <span className="text-destructive text-xs">*</span>
                 </Label>
                 <Input
                   id="companyName"
                   name="companyName"
                   required
                   placeholder="e.g. Google, Microsoft, Amazon"
-                  className="h-12 rounded-xl border-2 input-animated input-focus-glow"
+                  className="h-10 rounded-lg border-2 input-animated input-focus-glow"
                 />
-                <p className="text-xs text-muted-foreground ml-1">Enter the company name</p>
               </div>
               
-              <div className="space-y-2.5 group">
-                <Label htmlFor="role" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+              <div className="space-y-2 group">
+                <Label htmlFor="role" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
                   Job Role
-                  <span className="text-destructive">*</span>
+                  <span className="text-destructive text-xs">*</span>
                 </Label>
                 <Input
                   id="role"
                   name="role"
                   required
                   placeholder="e.g. Software Engineer, Product Manager"
-                  className="h-12 rounded-xl border-2 input-animated input-focus-glow"
+                  className="h-10 rounded-lg border-2 input-animated input-focus-glow"
                 />
-                <p className="text-xs text-muted-foreground ml-1">Position you're applying for</p>
               </div>
               
-              <div className="space-y-2.5 group">
-                <Label htmlFor="location" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+              <div className="space-y-2 group">
+                <Label htmlFor="location" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
                   <MapPin className="h-3 w-3" />
                   Location
                 </Label>
@@ -293,61 +240,77 @@ export default function AddApplicationPage() {
                   id="location"
                   name="location"
                   placeholder="e.g. San Francisco, Remote, Hybrid"
-                  className="h-12 rounded-xl border-2 input-animated input-focus-glow"
+                  className="h-10 rounded-lg border-2 input-animated input-focus-glow"
                 />
-                <p className="text-xs text-muted-foreground ml-1">Job location or work type</p>
               </div>
               
-              <div className="space-y-2.5 group">
-                <Label htmlFor="status" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+              <div className="space-y-2 group">
+                <Label htmlFor="status" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
                   Status
-                  <span className="text-destructive">*</span>
+                  <span className="text-destructive text-xs">*</span>
                 </Label>
                 <Select name="status" defaultValue={ApplicationStatus.APPLIED}>
-                  <SelectTrigger className="h-12 rounded-xl border-2">
+                  <SelectTrigger className="h-10 rounded-lg border-2">
                     <SelectValue placeholder="Select status" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl">
+                  <SelectContent className="rounded-lg">
                     {Object.values(ApplicationStatus).map(status => (
-                      <SelectItem key={status} value={status} className="rounded-lg">{status}</SelectItem>
+                      <SelectItem key={status} value={status} className="rounded-md">{status}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
-                <p className="text-xs text-muted-foreground ml-1">Current application status</p>
+              </div>
+              
+              <div className="space-y-2 group">
+                <Label htmlFor="dateApplied" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+                  <CalendarDays className="h-3 w-3" />
+                  Date Applied
+                </Label>
+                <Input
+                  id="dateApplied"
+                  name="dateApplied"
+                  type="date"
+                  defaultValue={new Date().toISOString().split('T')[0]}
+                  max={new Date().toISOString().split('T')[0]}
+                  className="h-10 rounded-lg border-2 input-animated input-focus-glow"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Select the date you applied to this position
+                </p>
               </div>
             </div>
           </CardContent>
         </Card>
 
         {/* Resume Information Section */}
-        <Card className="overflow-hidden animate-fade-in-up stagger-2 card-hover">
-          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-5 px-6">
-            <CardTitle className="text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
-              <FileText className="h-4 w-4 text-rose-500" />
+        <Card className="overflow-hidden animate-fade-in-up stagger-2 border-2 hover:border-primary/30 transition-all duration-300">
+          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-4 px-5">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
+              <FileText className="h-3.5 w-3.5 text-rose-500" />
               Resume Information
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6 space-y-5">
-            <div className="space-y-2.5 group">
-              <Label htmlFor="resumeName" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
+          <CardContent className="p-5 space-y-4">
+            <div className="space-y-2 group">
+              <Label htmlFor="resumeName" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary flex items-center gap-1.5">
                 Resume Version Name
-                <span className="text-destructive">*</span>
+                <span className="text-destructive text-xs">*</span>
               </Label>
               <Input
                 id="resumeName"
                 name="resumeName"
                 required
                 placeholder="e.g. SDE_Resume_v2, Frontend_React_2024"
-                className="h-12 rounded-xl border-2 input-animated input-focus-glow"
+                className="h-10 rounded-lg border-2 input-animated input-focus-glow"
               />
-              <p className="text-xs text-muted-foreground ml-1 flex items-center gap-1.5">
-                <Info className="h-3 w-3" />
+              <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
+                <Info className="h-3 w-3 flex-shrink-0" />
                 Use descriptive names to track which resume version you used
               </p>
             </div>
 
-            <div className="space-y-2.5">
-              <Label className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1">
+            <div className="space-y-2">
+              <Label className="text-xs font-semibold text-foreground">
                 Attach Resume (PDF)
               </Label>
               <input
@@ -360,7 +323,7 @@ export default function AddApplicationPage() {
               <label
                 htmlFor="resume-file"
                 className={`
-                  flex items-center justify-center gap-4 w-full px-6 py-10 rounded-2xl border-2 border-dashed 
+                  flex items-center justify-center gap-3 w-full px-4 py-6 rounded-lg border-2 border-dashed 
                   cursor-pointer transition-all duration-300 ease-out group/upload
                   ${fileData 
                     ? 'border-emerald-500/50 bg-emerald-500/5 hover:border-emerald-500/70' 
@@ -369,38 +332,37 @@ export default function AddApplicationPage() {
                 `}
               >
                 {fileData ? (
-                  <div className="flex items-center gap-4 w-full animate-scale-in">
-                    <div className="w-16 h-16 bg-emerald-500/10 rounded-xl flex items-center justify-center shadow-sm flex-shrink-0">
-                      <CheckCircle className="h-8 w-8 text-emerald-500" />
+                  <div className="flex items-center gap-3 w-full animate-scale-in">
+                    <div className="w-12 h-12 bg-emerald-500/10 rounded-lg flex items-center justify-center shadow-sm flex-shrink-0">
+                      <CheckCircle className="h-6 w-6 text-emerald-500" />
                     </div>
                     <div className="text-left flex-1 min-w-0">
-                      <p className="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-1">File Ready!</p>
+                      <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400 mb-0.5">File Ready!</p>
                       <p className="text-xs text-muted-foreground truncate">{fileData.name}</p>
-                      <p className="text-xs text-muted-foreground/70 mt-0.5">Click to change file</p>
                     </div>
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       onClick={(e) => { e.preventDefault(); clearFile(); }}
-                      className="text-muted-foreground hover:text-destructive transition-colors duration-200 flex-shrink-0"
+                      className="h-8 w-8 text-muted-foreground hover:text-destructive transition-colors duration-200 flex-shrink-0"
                     >
                       <X className="h-4 w-4" />
                     </Button>
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center gap-3 text-center">
-                    <div className="w-16 h-16 gradient-bg-subtle rounded-xl flex items-center justify-center transition-all duration-500 ease-out group-hover/upload:bg-gradient-to-br group-hover/upload:from-orange-500 group-hover/upload:to-amber-500 group-hover/upload:scale-110">
-                      <Upload className="h-8 w-8 text-primary transition-colors duration-300 group-hover/upload:text-white" />
+                  <div className="flex items-center gap-3 text-center">
+                    <div className="w-12 h-12 bg-muted rounded-lg flex items-center justify-center border border-border transition-all duration-300 ease-out group-hover/upload:bg-accent">
+                      <Upload className="h-6 w-6 text-muted-foreground transition-colors duration-300 group-hover/upload:text-foreground" />
                     </div>
                     <div>
-                      <p className="text-sm font-bold text-foreground mb-1">Upload Resume PDF</p>
+                      <p className="text-sm font-semibold text-foreground">Upload Resume PDF</p>
                       <p className="text-xs text-muted-foreground">Click to browse or drag and drop</p>
                     </div>
                   </div>
                 )}
               </label>
-              <p className="text-xs text-muted-foreground ml-1">
+              <p className="text-xs text-muted-foreground">
                 Attach the resume you used for this application (optional)
               </p>
             </div>
@@ -408,26 +370,26 @@ export default function AddApplicationPage() {
         </Card>
 
         {/* Notes Section */}
-        <Card className="overflow-hidden animate-fade-in-up stagger-3 card-hover">
-          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-5 px-6">
-            <CardTitle className="text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
-              <Briefcase className="h-4 w-4 text-blue-500" />
+        <Card className="overflow-hidden animate-fade-in-up stagger-3 border-2 hover:border-primary/30 transition-all duration-300">
+          <CardHeader className="gradient-bg-subtle border-b border-border/50 p-4 px-5">
+            <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
+              <Briefcase className="h-3.5 w-3.5 text-blue-500" />
               Additional Notes
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-6">
-            <div className="space-y-2.5 group">
-              <Label htmlFor="jobDescription" className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground ml-1 transition-colors duration-200 group-focus-within:text-primary">
+          <CardContent className="p-5">
+            <div className="space-y-2 group">
+              <Label htmlFor="jobDescription" className="text-xs font-semibold text-foreground transition-colors duration-200 group-focus-within:text-primary">
                 Job Description / Notes
               </Label>
               <Textarea
                 id="jobDescription"
                 name="jobDescription"
-                rows={6}
+                rows={5}
                 placeholder="Paste job requirements, add notes about the application, interview dates, or any relevant information..."
-                className="rounded-xl p-4 resize-none min-h-[160px] border-2 input-focus-glow transition-all duration-300"
+                className="rounded-lg p-3 resize-none min-h-[120px] border-2 input-focus-glow transition-all duration-300"
               />
-              <p className="text-xs text-muted-foreground ml-1">
+              <p className="text-xs text-muted-foreground">
                 Add any relevant information about this application
               </p>
             </div>
@@ -435,22 +397,22 @@ export default function AddApplicationPage() {
         </Card>
 
         {/* Submit Section */}
-        <div className="flex flex-col sm:flex-row gap-4 pt-2 animate-fade-in-up stagger-4">
+        <div className="flex flex-col sm:flex-row gap-3 pt-2 animate-fade-in-up stagger-4">
           <Button 
             type="submit" 
             variant="gradient"
-            size="xl"
-            className="flex-1 gap-2 group"
+            size="default"
+            className="flex-1 gap-2 group h-10"
             disabled={isSubmitting}
           >
             {isSubmitting ? (
               <>
-                <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                Saving Application...
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                Saving...
               </>
             ) : (
               <>
-                <Send className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                <Send className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
                 Save Application
               </>
             )}
@@ -459,8 +421,8 @@ export default function AddApplicationPage() {
             <Button 
               type="button" 
               variant="outline" 
-              size="xl" 
-              className="w-full sm:w-auto px-8 transition-colors duration-300 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
+              size="default" 
+              className="w-full sm:w-auto px-6 h-10 transition-colors duration-300 hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30"
             >
               Cancel
             </Button>
@@ -471,69 +433,69 @@ export default function AddApplicationPage() {
 
         {/* Sidebar Analytics */}
         {applications.length > 0 && (
-          <div className="lg:col-span-1 space-y-6">
-            <Card className="overflow-hidden animate-fade-in-up stagger-6 card-hover sticky top-6">
-              <CardHeader className="gradient-bg-subtle border-b border-border/50 p-5">
-                <CardTitle className="text-[13px] font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
-                  <TrendingUp className="h-4 w-4 text-primary" />
+          <div className="lg:col-span-1 space-y-5">
+            <Card className="overflow-hidden animate-fade-in-up stagger-6 border-2 hover:border-primary/30 transition-all duration-300 sticky top-6">
+              <CardHeader className="gradient-bg-subtle border-b border-border/50 p-4">
+                <CardTitle className="text-xs font-bold uppercase tracking-wider flex items-center gap-2 m-0 leading-none">
+                  <TrendingUp className="h-3.5 w-3.5 text-primary" />
                   Your Stats
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-5 space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center">
-                        <Briefcase className="h-4 w-4 text-white" />
+              <CardContent className="p-4 space-y-3">
+                <div className="space-y-2.5">
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center shadow-sm">
+                        <Briefcase className="h-3.5 w-3.5 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Total</p>
-                        <p className="text-lg font-bold text-foreground">{applications.length}</p>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Total</p>
+                        <p className="text-base font-bold text-foreground">{applications.length}</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
-                        <Target className="h-4 w-4 text-white" />
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-sm">
+                        <Target className="h-3.5 w-3.5 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Interviews</p>
-                        <p className="text-lg font-bold text-blue-500">{stats.interviews}</p>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Interviews</p>
+                        <p className="text-base font-bold text-blue-500">{stats.interviews}</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center">
-                        <CheckCircle className="h-4 w-4 text-white" />
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-500 to-green-500 flex items-center justify-center shadow-sm">
+                        <CheckCircle className="h-3.5 w-3.5 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Offers</p>
-                        <p className="text-lg font-bold text-emerald-500">{stats.offers}</p>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Offers</p>
+                        <p className="text-base font-bold text-emerald-500">{stats.offers}</p>
                       </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 rounded-xl bg-muted/30">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
-                        <Calendar className="h-4 w-4 text-white" />
+                  <div className="flex items-center justify-between p-3 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center shadow-sm">
+                        <Calendar className="h-3.5 w-3.5 text-white" />
                       </div>
                       <div>
-                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Response Rate</p>
-                        <p className="text-lg font-bold text-purple-500">{responseRate}%</p>
+                        <p className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Response Rate</p>
+                        <p className="text-base font-bold text-purple-500">{responseRate}%</p>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 <Link href="/applications">
-                  <Button variant="outline" className="w-full gap-2 group">
+                  <Button variant="outline" size="sm" className="w-full gap-2 group h-9">
                     View All Applications
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                   </Button>
                 </Link>
               </CardContent>
@@ -543,10 +505,10 @@ export default function AddApplicationPage() {
       </div>
 
       {/* Tips Section */}
-      <Card className="overflow-hidden animate-fade-in-up stagger-5 border-dashed bg-muted/30">
-        <CardContent className="p-5 flex items-start gap-4">
-          <div className="w-10 h-10 rounded-xl gradient-bg-subtle flex items-center justify-center flex-shrink-0">
-            <Sparkles className="h-5 w-5 text-primary" />
+      <Card className="overflow-hidden animate-fade-in-up stagger-5 border-2 border-dashed bg-muted/30 hover:border-primary/30 transition-all duration-300">
+        <CardContent className="p-4 flex items-start gap-3">
+          <div className="w-9 h-9 rounded-lg bg-muted flex items-center justify-center flex-shrink-0 border border-border">
+            <Lightbulb className="h-4 w-4 text-muted-foreground" />
           </div>
           <div className="flex-1">
             <p className="text-sm font-semibold text-foreground mb-1.5">Pro Tips</p>

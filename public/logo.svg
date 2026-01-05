@@ -1,0 +1,21 @@
+<svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="50%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  
+  <g transform="translate(20, 20)">
+    <rect x="-9" y="-5" width="18" height="12" rx="2" fill="url(#logoGradient)"/>
+    <path d="M -7 -5 L -7 -7.5 Q -7 -9 -4.5 -9 L 4.5 -9 Q 7 -9 7 -7.5 L 7 -5" fill="none" stroke="url(#logoGradient)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="-9" y1="2" x2="9" y2="2" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.4"/>
+    <circle cx="0" cy="-1" r="4" fill="none" stroke="url(#logoGradient)" stroke-width="1.5" opacity="0.5"/>
+    <circle cx="0" cy="-1" r="1.5" fill="url(#logoGradient)"/>
+    <circle cx="-5.5" cy="5" r="1.5" fill="url(#logoGradient)" opacity="0.9"/>
+    <circle cx="0" cy="6" r="1.5" fill="url(#logoGradient)" opacity="0.9"/>
+    <circle cx="5.5" cy="5" r="1.5" fill="url(#logoGradient)" opacity="0.9"/>
+  </g>
+</svg>
+
