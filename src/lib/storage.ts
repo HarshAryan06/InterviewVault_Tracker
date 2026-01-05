@@ -8,7 +8,7 @@ const STORAGE_KEYS = {
 export const loadApplications = (): Application[] => {
   if (typeof window === 'undefined') return [];
   const saved = localStorage.getItem(STORAGE_KEYS.APPLICATIONS);
-  return saved ? JSON.parse(saved) : [];
+  return saved ? (JSON.parse(saved) as Application[]) : [];
 };
 
 export const saveApplications = (applications: Application[]): void => {

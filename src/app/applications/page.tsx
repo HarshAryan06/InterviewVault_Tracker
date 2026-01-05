@@ -9,8 +9,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ApplicationCard } from '@/components/features/application-card';
 import { useApplications } from '@/hooks';
-import { filterApplications, calculateStats } from '@/lib/stats';
+import { filterApplications } from '@/lib/stats';
 import { ApplicationStatus } from '@/types';
+import { applicationSelectors } from '@/selectors';
 import { 
   Search, 
   Briefcase, 
@@ -39,7 +40,7 @@ export default function ApplicationsPage() {
     [applications, deferredSearch, statusFilter]
   );
 
-  const stats = useMemo(() => calculateStats(applications), [applications]);
+  // Stats available if needed: const stats = useMemo(() => calculateStats(applications), [applications]);
 
   const hasActiveFilters = searchTerm !== '' || statusFilter !== 'All';
 
@@ -51,11 +52,11 @@ export default function ApplicationsPage() {
   const statusCounts = useMemo(() => {
     return {
       all: applications.length,
-      applied: applications.filter(a => a.status === ApplicationStatus.APPLIED).length,
-      pending: applications.filter(a => a.status === ApplicationStatus.PENDING).length,
-      interviewing: applications.filter(a => a.status === ApplicationStatus.INTERVIEWING).length,
-      offer: applications.filter(a => a.status === ApplicationStatus.OFFER).length,
-      rejected: applications.filter(a => a.status === ApplicationStatus.REJECTED).length,
+      applied: applicationSelectors.byStatus(applications, ApplicationStatus.APPLIED).length,
+      pending: applicationSelectors.byStatus(applications, ApplicationStatus.PENDING).length,
+      interviewing: applicationSelectors.byStatus(applications, ApplicationStatus.INTERVIEWING).length,
+      offer: applicationSelectors.byStatus(applications, ApplicationStatus.OFFER).length,
+      rejected: applicationSelectors.byStatus(applications, ApplicationStatus.REJECTED).length,
     };
   }, [applications]);
 
@@ -193,7 +194,7 @@ export default function ApplicationsPage() {
       {searchTerm && (
         <div className="flex items-center gap-2 text-sm text-muted-foreground animate-fade-in">
           <SlidersHorizontal className="h-4 w-4" />
-          Found <span className="font-semibold text-foreground">{filteredApps.length}</span> results for "{searchTerm}"
+          Found <span className="font-semibold text-foreground">{filteredApps.length}</span> results for &quot;{searchTerm}&quot;
         </div>
       )}
 

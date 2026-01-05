@@ -2,20 +2,25 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { Application, ApplicationStatus } from '@/types';
-import { loadApplications, saveApplications } from '@/lib/storage';
+import { ApplicationStorageService } from '@/services/storage';
 
 export const useApplications = () => {
   const [applications, setApplications] = useState<Application[]>([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    setApplications(loadApplications());
-    setIsLoaded(true);
+    // Load applications on mount - use setTimeout to avoid synchronous setState
+    const timer = setTimeout(() => {
+      const loaded = ApplicationStorageService.load();
+      setApplications(loaded);
+      setIsLoaded(true);
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
     if (isLoaded) {
-      saveApplications(applications);
+      ApplicationStorageService.save(applications);
     }
   }, [applications, isLoaded]);
 

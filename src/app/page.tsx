@@ -12,6 +12,8 @@ import { StatusBadge } from '@/components/features/status-badge';
 import { useApplications } from '@/hooks';
 import { calculateStats } from '@/lib/stats';
 import { ApplicationStatus } from '@/types';
+import { applicationSelectors } from '@/selectors';
+import { dateUtils } from '@/utils/date';
 import {
   Briefcase,
   FileText,
@@ -29,14 +31,12 @@ export default function DashboardPage() {
 
   const stats = useMemo(() => calculateStats(applications), [applications]);
   const uniqueResumes = useMemo(
-    () => Array.from(new Set(applications.map(a => a.resumeName))).slice(0, 3),
+    () => applicationSelectors.uniqueResumes(applications).slice(0, 3),
     [applications]
   );
 
   const thisWeekApps = useMemo(() => {
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-    return applications.filter(app => new Date(app.dateApplied) >= oneWeekAgo).length;
+    return applicationSelectors.thisWeek(applications).length;
   }, [applications]);
 
   const responseRate = useMemo(() => {
@@ -90,7 +90,7 @@ export default function DashboardPage() {
           <span className="text-foreground">Application.</span>
         </h2>
         <p className="text-muted-foreground text-sm md:text-base max-w-md font-medium leading-relaxed animate-fade-in-up stagger-2">
-          Keep track of all the companies you've applied to. Never lose track of your job search progress.
+          Keep track of all the companies you&apos;ve applied to. Never lose track of your job search progress.
         </p>
         <div className="flex flex-wrap gap-4 pt-2 animate-fade-in-up stagger-3">
           <Link href="/add">
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                       <div className="flex items-center gap-2">
                         <StatusBadge status={app.status} size="sm" />
                         <span className="text-[10px] text-muted-foreground/70 font-medium">
-                          {new Date(app.dateApplied).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                          {dateUtils.formatShortDate(app.dateApplied)}
                         </span>
                       </div>
                     </div>
@@ -235,7 +235,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent className="p-6 space-y-3">
             {uniqueResumes.map((name, index) => {
-              const usageCount = applications.filter(a => a.resumeName === name).length;
+              const usageCount = applicationSelectors.resumeUsageCount(applications, name);
               return (
                 <div
                   key={name}

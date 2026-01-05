@@ -25,7 +25,10 @@ export function ProgressRing({ percentage }: ProgressRingProps) {
     if (!isVisible) return;
     
     if (percentage === 0) {
-      setAnimatedPercentage(0);
+      // Use requestAnimationFrame to avoid synchronous setState
+      requestAnimationFrame(() => {
+        setAnimatedPercentage(0);
+      });
       return;
     }
 

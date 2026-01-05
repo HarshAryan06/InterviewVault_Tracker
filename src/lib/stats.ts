@@ -1,12 +1,13 @@
 import { Application, ApplicationStatus, DashboardStats } from '@/types';
+import { applicationSelectors } from '@/selectors';
 
 export const calculateStats = (applications: Application[]): DashboardStats => ({
   total: applications.length,
-  interviews: applications.filter(a => a.status === ApplicationStatus.INTERVIEWING).length,
-  offers: applications.filter(a => a.status === ApplicationStatus.OFFER).length,
-  pending: applications.filter(a => a.status === ApplicationStatus.PENDING).length,
-  rejected: applications.filter(a => a.status === ApplicationStatus.REJECTED).length,
-  applied: applications.filter(a => a.status === ApplicationStatus.APPLIED).length,
+  interviews: applicationSelectors.byStatus(applications, ApplicationStatus.INTERVIEWING).length,
+  offers: applicationSelectors.byStatus(applications, ApplicationStatus.OFFER).length,
+  pending: applicationSelectors.byStatus(applications, ApplicationStatus.PENDING).length,
+  rejected: applicationSelectors.byStatus(applications, ApplicationStatus.REJECTED).length,
+  applied: applicationSelectors.byStatus(applications, ApplicationStatus.APPLIED).length,
 });
 
 export const calculateProgressPercentage = (stats: DashboardStats): number => {
@@ -21,17 +22,12 @@ export const filterApplications = (
   let result = applications;
 
   if (statusFilter !== 'All') {
-    result = result.filter(app => app.status === statusFilter);
+    result = applicationSelectors.byStatus(result, statusFilter as ApplicationStatus);
   }
 
   if (searchTerm) {
-    const lower = searchTerm.toLowerCase();
-    result = result.filter(app =>
-      app.companyName.toLowerCase().includes(lower) ||
-      app.role.toLowerCase().includes(lower)
-    );
+    result = applicationSelectors.bySearchTerm(result, searchTerm);
   }
 
   return result;
 };
-

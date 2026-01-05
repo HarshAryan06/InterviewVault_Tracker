@@ -1,6 +1,6 @@
 import { Badge } from '@/components/ui/badge';
 import { ApplicationStatus } from '@/types';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 
 interface StatusBadgeProps {
   status: ApplicationStatus;

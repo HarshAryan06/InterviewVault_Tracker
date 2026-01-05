@@ -6,10 +6,10 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
 import { StatusBadge } from '@/components/features/status-badge';
 import { useApplications } from '@/hooks';
 import { ApplicationStatus } from '@/types';
+import { applicationSelectors } from '@/selectors';
 import { ChevronLeft, Trash2, Download, MapPin, Calendar, FileText, Briefcase, Info, History, FileCheck } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -18,9 +18,16 @@ export default function ApplicationDetailsPage() {
   const router = useRouter();
   const { applications, updateApplicationStatus, deleteApplication, isLoaded } = useApplications();
   
+  // Safely extract id from params to avoid enumeration issues
+  const appId = useMemo(() => {
+    if (!params || !('id' in params)) return null;
+    const id = params.id;
+    return typeof id === 'string' ? id : Array.isArray(id) ? id[0] : null;
+  }, [params]);
+  
   const app = useMemo(
-    () => applications.find(a => a.id === params.id),
-    [applications, params.id]
+    () => appId ? applicationSelectors.byId(applications, appId) : undefined,
+    [applications, appId]
   );
 
   const handleStatusUpdate = (newStatus: ApplicationStatus) => {

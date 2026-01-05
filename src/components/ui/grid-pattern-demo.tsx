@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/utils"
 import { GridPattern } from "@/components/ui/grid-pattern"
 
 export function GridPatternDemo() {

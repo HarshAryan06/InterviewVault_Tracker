@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import { useEffect, useState } from 'react';
 
 interface LogoProps {
@@ -12,9 +12,9 @@ interface LogoProps {
 }
 
 const sizeMap = {
-  sm: { icon: 20, text: 'text-sm' },
-  md: { icon: 28, text: 'text-base' },
-  lg: { icon: 36, text: 'text-lg' },
+  sm: { icon: 24, text: 'text-base' },
+  md: { icon: 32, text: 'text-lg' },
+  lg: { icon: 40, text: 'text-xl' },
 };
 
 export function Logo({ className, size = 'md', showText = true, variant = 'default', hideIcon = false }: LogoProps) {
@@ -148,7 +148,7 @@ export function Logo({ className, size = 'md', showText = true, variant = 'defau
   return (
     <div className={cn('flex items-center gap-2.5', className)}>
       {!hideIcon && logoIcon}
-      <div className="flex flex-col leading-[1.1]">
+      <div className="flex items-center gap-1.5 leading-[1.1]">
         <span className={cn(
           'font-black tracking-[-0.02em] uppercase', 
           textSize, 

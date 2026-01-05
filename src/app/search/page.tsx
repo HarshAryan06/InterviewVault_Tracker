@@ -8,7 +8,6 @@ import { Card, CardContent } from '@/components/ui/card';
 import { useApplications } from '@/hooks';
 import { filterApplications } from '@/lib/stats';
 import { Search, Briefcase, ArrowRight, X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import { StatusBadge } from '@/components/features/status-badge';
 import { Application } from '@/types';
 
@@ -112,7 +111,7 @@ export default function SearchPage() {
                 </div>
                 <h3 className="text-lg font-bold mb-2">No results found</h3>
                 <p className="text-sm text-muted-foreground text-center max-w-md">
-                  No applications match "{searchTerm}". Try a different search term or check your spelling.
+                  No applications match &quot;{searchTerm}&quot;. Try a different search term or check your spelling.
                 </p>
               </CardContent>
             </Card>

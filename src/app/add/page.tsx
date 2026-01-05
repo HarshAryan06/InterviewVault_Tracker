@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
@@ -9,11 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Separator } from '@/components/ui/separator';
-import { Badge } from '@/components/ui/badge';
 import { useApplications, useFileUpload } from '@/hooks';
 import { Application, ApplicationStatus } from '@/types';
-import { calculateStats, calculateProgressPercentage } from '@/lib/stats';
+import { calculateStats } from '@/lib/stats';
+import { dateUtils } from '@/utils/date';
 import { 
   ArrowLeft, 
   ArrowRight,
@@ -30,7 +29,6 @@ import {
   Info,
   TrendingUp,
   Target,
-  Zap,
   Calendar,
   CalendarDays
 } from 'lucide-react';
@@ -43,7 +41,6 @@ export default function AddApplicationPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const stats = useMemo(() => calculateStats(applications), [applications]);
-  const progressPercentage = useMemo(() => calculateProgressPercentage(stats), [stats]);
   
   const responseRate = useMemo(() => {
     if (applications.length === 0) return 0;
@@ -53,24 +50,19 @@ export default function AddApplicationPage() {
     return Math.round((responded / applications.length) * 100);
   }, [applications]);
 
-  const offerRate = useMemo(() => {
-    if (applications.length === 0) return 0;
-    return Math.round((stats.offers / applications.length) * 100);
-  }, [stats, applications]);
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsSubmitting(true);
     
     const formData = new FormData(e.currentTarget);
     
-    await new Promise(resolve => setTimeout(resolve, 400));
+    await new Promise<void>(resolve => setTimeout(resolve, 400));
     
     // Get the date from form or use today's date
     const dateAppliedValue = formData.get('dateApplied') as string;
     const appliedDate = dateAppliedValue 
-      ? new Date(dateAppliedValue).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      ? dateUtils.formatDate(dateAppliedValue)
+      : dateUtils.formatDate(new Date());
     
     const app: Application = {
       id: crypto.randomUUID(),
@@ -93,77 +85,6 @@ export default function AddApplicationPage() {
     router.push('/applications');
   };
 
-  // Compact Circular Progress Component
-  const CompactProgressRing = ({ percentage, label, value, gradientId }: { percentage: number; label: string; value: string | number; gradientId: string }) => {
-    const [animatedPercentage, setAnimatedPercentage] = useState(0);
-    const radius = 32;
-    const circumference = 2 * Math.PI * radius;
-    const strokeDashoffset = circumference * (1 - animatedPercentage / 100);
-
-    useEffect(() => {
-      const duration = 1000;
-      const startTime = performance.now();
-      
-      const animate = (currentTime: number) => {
-        const elapsed = currentTime - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
-        setAnimatedPercentage(Math.round(eased * percentage));
-        
-        if (progress < 1) {
-          requestAnimationFrame(animate);
-        }
-      };
-      
-      requestAnimationFrame(animate);
-    }, [percentage]);
-
-    return (
-      <Card className="overflow-hidden card-hover group">
-        <CardContent className="p-5 flex flex-col items-center justify-center relative">
-          <div className="relative w-28 h-28 flex items-center justify-center mb-3">
-            <svg className="w-full h-full transform -rotate-90" style={{ transform: 'rotate(-90deg)' }}>
-              <defs>
-                <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#f97316" />
-                  <stop offset="50%" stopColor="#fb923c" />
-                  <stop offset="100%" stopColor="#fbbf24" />
-                </linearGradient>
-              </defs>
-              <circle
-                cx="40"
-                cy="40"
-                r={radius}
-                stroke="currentColor"
-                strokeWidth="6"
-                fill="transparent"
-                className="text-muted/20"
-              />
-              <circle
-                cx="40"
-                cy="40"
-                r={radius}
-                stroke={`url(#${gradientId})`}
-                strokeWidth="8"
-                fill="transparent"
-                strokeDasharray={circumference}
-                strokeDashoffset={strokeDashoffset}
-                strokeLinecap="round"
-                style={{
-                  transition: 'stroke-dashoffset 0.1s ease-out',
-                  filter: 'drop-shadow(0 0 4px rgba(249, 115, 22, 0.3))',
-                }}
-              />
-            </svg>
-            <div className="absolute flex flex-col items-center">
-              <span className="text-2xl font-extrabold tracking-tight stats-number">{value}</span>
-              <span className="text-[8px] font-bold text-muted-foreground uppercase tracking-wider mt-0.5">{label}</span>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  };
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
@@ -270,8 +191,8 @@ export default function AddApplicationPage() {
                   id="dateApplied"
                   name="dateApplied"
                   type="date"
-                  defaultValue={new Date().toISOString().split('T')[0]}
-                  max={new Date().toISOString().split('T')[0]}
+                  defaultValue={dateUtils.formatISO(new Date())}
+                  max={dateUtils.formatISO(new Date())}
                   className="h-10 rounded-lg border-2 input-animated input-focus-glow"
                 />
                 <p className="text-xs text-muted-foreground">
@@ -513,7 +434,7 @@ export default function AddApplicationPage() {
           <div className="flex-1">
             <p className="text-sm font-semibold text-foreground mb-1.5">Pro Tips</p>
             <ul className="text-xs text-muted-foreground space-y-1.5 list-disc list-inside">
-              <li>Use descriptive resume names like "Frontend_React_2024" to easily identify which resume you used for each application</li>
+              <li>Use descriptive resume names like &quot;Frontend_React_2024&quot; to easily identify which resume you used for each application</li>
               <li>Add job descriptions to help you prepare for interviews and compare opportunities</li>
               <li>Update the status regularly to keep track of your application progress</li>
             </ul>

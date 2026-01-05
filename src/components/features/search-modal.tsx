@@ -13,7 +13,7 @@ import { Button } from '@/components/ui/button';
 import { useApplications } from '@/hooks';
 import { filterApplications } from '@/lib/stats';
 import { Search, Briefcase, XCircle, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { cn } from '@/utils';
 import Link from 'next/link';
 
 interface SearchModalProps {
@@ -40,8 +40,16 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
       setTimeout(() => {
         inputRef.current?.focus();
       }, 100);
-    } else {
-      setSearchTerm('');
+    }
+  }, [open]);
+
+  // Clear search when modal closes - use setTimeout to avoid synchronous setState
+  useEffect(() => {
+    if (!open) {
+      const timer = setTimeout(() => {
+        setSearchTerm('');
+      }, 0);
+      return () => clearTimeout(timer);
     }
   }, [open]);
 
@@ -129,7 +137,7 @@ export function SearchModal({ open, onOpenChange }: SearchModalProps) {
                 </div>
                 <h3 className="text-lg font-bold mb-2">No results found</h3>
                 <p className="text-sm text-muted-foreground max-w-sm">
-                  Try adjusting your search term to find what you're looking for.
+                  Try adjusting your search term to find what you&apos;re looking for.
                 </p>
               </div>
             )
