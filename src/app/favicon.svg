@@ -1,0 +1,87 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="faviconGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#f97316" />
+      <stop offset="50%" stop-color="#fb923c" />
+      <stop offset="100%" stop-color="#fbbf24" />
+    </linearGradient>
+  </defs>
+  
+  <rect width="32" height="32" rx="6" fill="url(#faviconGradient)"/>
+  
+  <g transform="translate(16, 16)">
+    <!-- Briefcase body -->
+    <rect
+      x="-7"
+      y="-4"
+      width="14"
+      height="10"
+      rx="1.5"
+      fill="white"
+      opacity="0.95"
+    />
+    
+    <!-- Briefcase handle -->
+    <path
+      d="M -5.5 -4 L -5.5 -6 Q -5.5 -7 -3.5 -7 L 3.5 -7 Q 5.5 -7 5.5 -6 L 5.5 -4"
+      fill="none"
+      stroke="white"
+      stroke-width="1.5"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    />
+    
+    <!-- Briefcase divider -->
+    <line
+      x1="-7"
+      y1="1.5"
+      x2="7"
+      y2="1.5"
+      stroke="white"
+      stroke-width="1"
+      opacity="0.6"
+    />
+    
+    <!-- Lock emblem circle -->
+    <circle
+      cx="0"
+      cy="-1"
+      r="3"
+      fill="none"
+      stroke="white"
+      stroke-width="1.2"
+      opacity="0.5"
+    />
+    
+    <!-- Center dot -->
+    <circle
+      cx="0"
+      cy="-1"
+      r="1.2"
+      fill="white"
+    />
+    
+    <!-- Tracking dots -->
+    <circle
+      cx="-4"
+      cy="4"
+      r="1.2"
+      fill="white"
+      opacity="0.9"
+    />
+    <circle
+      cx="0"
+      cy="5"
+      r="1.2"
+      fill="white"
+      opacity="0.9"
+    />
+    <circle
+      cx="4"
+      cy="4"
+      r="1.2"
+      fill="white"
+      opacity="0.9"
+    />
+  </g>
+</svg>
