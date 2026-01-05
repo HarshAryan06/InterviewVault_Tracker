@@ -32,7 +32,8 @@ export function MobileNav() {
         {navItems.map((item) => {
           const Icon = item.icon;
           
-          if (item.isMain) {
+          // Handle main button (always has href)
+          if (item.isMain && 'href' in item && item.href) {
             return (
               <Link
                 key={item.href}
@@ -49,6 +50,7 @@ export function MobileNav() {
             );
           }
           
+          // Handle search button (no href)
           if (item.isSearch) {
             return (
               <button
@@ -64,14 +66,19 @@ export function MobileNav() {
             );
           }
           
-          // Extract pathname from href (remove query params for comparison)
-          const itemPath = item.href.split('?')[0];
-          const isActive = pathname === itemPath || pathname === item.href;
+          // Handle regular nav items (must have href)
+          if (!('href' in item) || !item.href) {
+            return null;
+          }
+          
+          const href = item.href;
+          const itemPath = href.split('?')[0];
+          const isActive = pathname === itemPath || pathname === href;
           
           return (
             <Link
-              key={item.href}
-              href={item.href}
+              key={href}
+              href={href}
               className={cn(
                 'flex flex-col items-center justify-center gap-1 h-full rounded-xl pointer-events-auto group transition-all duration-300 ease-out',
                 isActive 
