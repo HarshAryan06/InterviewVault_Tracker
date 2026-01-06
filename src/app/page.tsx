@@ -63,10 +63,32 @@ export default function DashboardPage() {
 
   if (!isLoaded) {
     return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <div className="flex flex-col items-center gap-4">
-          <div className="w-10 h-10 rounded-full border-3 border-primary/20 border-t-primary animate-spin" />
-          <p className="text-muted-foreground font-medium">Loading...</p>
+      <div className="space-y-10 animate-pulse">
+        {/* Hero Skeleton */}
+        <div className="space-y-5">
+          <div className="h-10 w-32 bg-muted rounded-full" />
+          <div className="space-y-3">
+            <div className="h-12 w-3/4 bg-muted rounded-lg" />
+            <div className="h-6 w-1/2 bg-muted rounded-lg" />
+          </div>
+          <div className="flex gap-4">
+            <div className="h-12 w-40 bg-muted rounded-xl" />
+            <div className="h-12 w-32 bg-muted rounded-xl" />
+          </div>
+        </div>
+
+        {/* Stats Grid Skeleton */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-20 bg-muted rounded-xl" />
+          ))}
+        </div>
+
+        {/* Stats Section Skeleton */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-32 bg-muted rounded-xl" />
+          ))}
         </div>
       </div>
     );
@@ -123,7 +145,7 @@ export default function DashboardPage() {
           <Card
             key={stat.label}
             className="card-hover overflow-hidden group animate-fade-in-up"
-            style={{ animationDelay: `${0.3 + index * 0.1}s` }}
+            style={{ animationDelay: `${0.2 + index * 0.05}s` }}
           >
             <CardContent className="p-4 flex items-center gap-3">
               <div className={`w-10 h-10 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center shadow-lg transition-transform duration-500 ease-out group-hover:scale-110`}>
@@ -318,9 +340,9 @@ export default function DashboardPage() {
       )}
 
       {/* Mobile Footer - Only visible on home page mobile view */}
-      <div className="md:hidden mt-8 mb-4">
+      <div className="md:hidden mt-8 mb-16">
         <div className="border-t border-border/30 pt-6">
-          <div className="flex flex-col items-center gap-4 text-center">
+          <div className="flex flex-col items-center gap-4 text-center max-w-xs mx-auto">
             <p className="text-sm text-muted-foreground">
               Built with <span className="text-amber-500">🍵</span> by{' '}
               <span className="font-semibold gradient-text-primary">Harsh</span>

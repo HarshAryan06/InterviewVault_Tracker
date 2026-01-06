@@ -38,8 +38,8 @@ export function HoverBorderGradient({
   }, []);
 
   // Determine current theme: handle system theme and SSR
-  const currentTheme = mounted 
-    ? (theme === "system" ? systemTheme : theme) 
+  const currentTheme = mounted
+    ? (theme === "system" ? systemTheme : theme)
     : "dark";
 
   const rotateDirection = useCallback((currentDirection: Direction): Direction => {
@@ -83,7 +83,7 @@ export function HoverBorderGradient({
       return () => clearInterval(interval);
     }
   }, [hovered, duration, clockwise, rotateDirection]);
-  
+
   return (
     <Tag
       onMouseEnter={() => {
@@ -109,7 +109,7 @@ export function HoverBorderGradient({
           "flex-none inset-0 overflow-hidden absolute z-0 rounded-[inherit]"
         )}
         style={{
-          filter: "blur(2px)",
+          filter: "blur(1.5px)",
           position: "absolute",
           width: "100%",
           height: "100%",
@@ -120,7 +120,7 @@ export function HoverBorderGradient({
             ? [movingMap[direction], highlight]
             : movingMap[direction],
         }}
-        transition={{ ease: "linear", duration: (duration ?? 1) / 1.4 }}
+        transition={{ ease: "linear", duration: (duration ?? 1) / 1.5 }}
       />
       <div className="bg-background absolute z-[1] flex-none inset-[2px] rounded-[100px]" />
     </Tag>

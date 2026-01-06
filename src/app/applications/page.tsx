@@ -226,7 +226,7 @@ export default function ApplicationsPage() {
         ))}
         
         {filteredApps.length === 0 && (
-          <Card className="col-span-full animate-scale-in">
+          <Card className="col-span-full animate-scale-in mb-16 md:mb-0">
             <CardContent className="py-20 text-center">
               <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-muted flex items-center justify-center border border-border">
                 <Briefcase className="h-10 w-10 text-muted-foreground" />

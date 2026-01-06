@@ -59,7 +59,7 @@ export function CalendarHeader({
                     <Button
                         variant="ghost"
                         size="icon"
-                        className="rounded-full hover:bg-accent h-8 w-8 sm:h-9 sm:w-9 md:h-12 md:w-12 touch-manipulation active:scale-95"
+                        className="rounded-full hover:bg-accent h-8 w-8 sm:h-9 sm:w-9 touch-manipulation active:scale-95 md:hidden"
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();

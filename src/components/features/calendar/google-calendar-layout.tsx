@@ -36,7 +36,7 @@ export function GoogleCalendarLayout({
     };
 
     return (
-        <div className="flex flex-col h-[calc(100vh-280px)] sm:h-[calc(100vh-240px)] md:h-[calc(100vh-180px)] bg-background border border-border rounded-lg overflow-hidden shadow-sm">
+        <div className="flex flex-col h-auto min-h-[70vh] sm:h-[calc(100vh-240px)] md:h-[calc(100vh-180px)] bg-background border border-border rounded-lg overflow-hidden shadow-sm">
             <CalendarHeader
                 currentDate={currentDate}
                 onNavigate={onNavigate}

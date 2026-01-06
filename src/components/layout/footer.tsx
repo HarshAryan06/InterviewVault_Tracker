@@ -14,9 +14,9 @@ export function Footer() {
     }, []);
 
     return (
-        <footer className="hidden md:block py-4 px-6">
+        <footer className="hidden md:block py-2 md:py-3 px-6">
             <div className="max-w-6xl mx-auto">
-                <div className="border-t border-border/30 pt-4">
+                <div className="border-t border-border/30 pt-2 md:pt-3">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
                         <p className="text-sm text-muted-foreground">
                             Built with <span className="text-amber-500">🍵</span> by{' '}

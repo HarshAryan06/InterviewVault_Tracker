@@ -155,7 +155,7 @@ export function CalendarSidebar({ className, onDateClick, currentDate = new Date
 
     return (
         <aside className={cn("w-56 md:w-64 flex flex-col p-2 md:p-3 gap-3 md:gap-4 h-full bg-background border-r border-border", className)}>
-            <div className="flex justify-center px-0.5 pt-4 md:pt-5">
+            <div className="flex justify-center px-0.5 pt-7 md:pt-8">
                 <Button
                     variant="gradient"
                     className="w-full max-w-[180px] md:max-w-[200px] h-9 md:h-10 rounded-lg md:rounded-xl shadow-md hover:shadow-lg transition-all duration-300 group"
@@ -170,7 +170,7 @@ export function CalendarSidebar({ className, onDateClick, currentDate = new Date
                 </Button>
             </div>
 
-            <div className="flex-1 overflow-y-auto pt-2 md:pt-3">
+            <div className="flex-1 overflow-y-auto pt-4 md:pt-5">
                 {/* Quick Navigation */}
                 <div className="mb-3 md:mb-4 px-1 md:px-2">
                     <button

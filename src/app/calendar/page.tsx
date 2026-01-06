@@ -114,15 +114,15 @@ export default function CalendarPage() {
     } else if (direction instanceof Date) {
       setCurrentDate(direction);
     } else {
-      setCurrentDate(prev => {
-        const newDate = new Date(prev);
-        if (direction === 'prev') {
-          newDate.setMonth(prev.getMonth() - 1);
-        } else {
-          newDate.setMonth(prev.getMonth() + 1);
-        }
-        return newDate;
-      });
+    setCurrentDate(prev => {
+      const newDate = new Date(prev);
+      if (direction === 'prev') {
+        newDate.setMonth(prev.getMonth() - 1);
+      } else {
+        newDate.setMonth(prev.getMonth() + 1);
+      }
+      return newDate;
+    });
     }
   };
 
