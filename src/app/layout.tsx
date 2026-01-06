@@ -15,10 +15,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'JobTracker | Track Your Job Applications',
   description: 'Track all the companies you applied to. Manage your job applications, resumes, and interview status in one place.',
-  icons: {
-    icon: '/logo.svg',
-    apple: '/logo.svg',
-  },
 };
 
 export default function RootLayout({
