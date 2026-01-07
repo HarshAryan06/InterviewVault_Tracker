@@ -1,4 +1,4 @@
-# InterviewVault Tracker
+# Job Tracker
 
 A job application tracker that doesn't suck. Built because I got tired of losing track of all the companies I've applied to.
 
